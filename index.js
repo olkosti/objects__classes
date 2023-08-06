@@ -71,54 +71,70 @@ const data = [
     }
 ];
 
+const root = document.querySelector('.root');
 
+//Функция для создания карточки транспорта
+function createTransportCard(item, transport, specialInfo, specialValue) {
+    //Создание элементов для карточки
+    const divTransportCard = document.createElement('div');
+    divTransportCard.className = 'transport__card';
 
-const root = document.querySelector('.root')
+    const divTransportImages = document.createElement('div');
+    divTransportImages.className = 'transport__images';
 
+    //Добавление изображения
+    const image = document.createElement('img');
+    image.src = item.image;
+    divTransportImages.append(image);
+
+    //Добавление информации о транспорте
+    const divTransportInformation = document.createElement('div');
+    divTransportInformation.className = 'transport__information';
+    divTransportInformation.textContent = transport.getInfo();
+
+    //Добавление спец. информации (двери для машины, макс. скорость для байка)
+    const divTransportSpecial = document.createElement('div');
+    divTransportSpecial.className = 'transport__special';
+    divTransportSpecial.textContent = `${specialInfo}: ${specialValue}`;
+
+    //Добавление цены 
+    const divTransportPrice = document.createElement('div');
+    divTransportPrice.className = 'transport__price';
+    divTransportPrice.textContent = `Price: ${transport.getPrice()}`;
+
+    //Собираем все части вместе и добавляем карточку в корневой элемент
+    divTransportCard.append(
+        divTransportImages,
+        divTransportInformation,
+        divTransportSpecial,
+        divTransportPrice
+    );
+    root.append(divTransportCard);
+}
+
+//Обход массива данных и создание соттветсвующих объектов транспорта
 data.forEach((item) => {
-        let transport;
+        //Если это машина
     
         if (item.type === 'car') {
-        transport = new Car(item.type, item.brand, item.price, item.image, item.doors);
-
-        const divTransportCard = document.createElement('div');
-        divTransportCard.className = 'transport__card';
-        const divTransportImages = document.createElement('div');
-        divTransportImages.className = 'transport__images';
-        const image = document.createElement('img');
-        image.src = item.image;
-        const divTransportInformation = document.createElement('div');
-        divTransportInformation.className = 'transport__information';
-        divTransportInformation.textContent = transport.getInfo();
-        const divTransportDoors = document.createElement('div');
-        divTransportDoors.className = 'transport__doors';
-        divTransportDoors.textContent = `Doors: ${transport.getDoorsCount()}`;
-        const divTransportPrice = document.createElement('div');
-        divTransportPrice.className = 'transport__price';
-        divTransportPrice.textContent = `Price: ${transport.getPrice()}`;
-        divTransportCard.append(divTransportImages, divTransportInformation, divTransportDoors, divTransportPrice);
-        divTransportImages.append(image);
-        root.append(divTransportCard);
-    
-        } else if (item.type === 'bike') {
-        transport = new Bike(item.type, item.brand, item.price, item.image, item.maxSpeed);
-        const divTransportCard = document.createElement('div');
-        divTransportCard.className = 'transport__card';
-        const divTransportImages = document.createElement('div');
-        divTransportImages.className = 'transport__images';
-        const image = document.createElement('img');
-        image.src = item.image;
-        const divTransportInformation = document.createElement('div');
-        divTransportInformation.className = 'transport__information';
-        divTransportInformation.textContent = transport.getInfo();
-        const divTransportDoors = document.createElement('div');
-        divTransportDoors.className = 'transport__doors';
-        divTransportDoors.textContent = `Max Speed: ${transport.getMaxSpeed()} km/h`;
-        const divTransportPrice = document.createElement('div');
-        divTransportPrice.className = 'transport__price';
-        divTransportPrice.textContent = `Price: ${transport.getPrice()}`;
-        divTransportCard.append(divTransportImages, divTransportInformation, divTransportDoors, divTransportPrice);
-        divTransportImages.append(image);
-        root.append(divTransportCard);
+            const transport = new Car(
+                item.type,
+                item.brand,
+                item.price, 
+                item.image, 
+                item.doors
+            );
+                createTransportCard(item, transport, "Doors", transport.getDoorsCount());           
+        }         
+        //Если это байк
+        else if (item.type === 'bike') {
+            const transport = new Bike(
+                item.type,
+                item.brand,
+                item.price, 
+                item.image, 
+                item.maxSpeed
+            );
+            createTransportCard(item, transport, "Max Speed", `${transport.getMaxSpeed()} km/h`);
         }
 });
